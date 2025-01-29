@@ -13,12 +13,16 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String QUEUE_NAME = "email-queue";
+    public static final String QUEUE_EMAIL = "email-queue";
+    public static final String QUEUE_PDF = "pdf-queue";
 
     @Bean
     public Queue userRegistrationQueue() {
-        return new Queue(QUEUE_NAME, true);
+        return new Queue(QUEUE_EMAIL, true);
     }
+
+    @Bean
+    public Queue pdfQueue() {return new Queue(QUEUE_PDF, true);}
 
     @Bean
     public TopicExchange userExchange() {
@@ -28,6 +32,11 @@ public class RabbitMQConfig {
     @Bean
     public Binding emailBinding(Queue userRegistrationQueue, TopicExchange userExchange) {
         return BindingBuilder.bind(userRegistrationQueue).to(userExchange).with("user.email");
+    }
+
+    @Bean
+    public Binding pdfBinding(Queue pdfQueue, TopicExchange userExchange) {
+        return BindingBuilder.bind(pdfQueue).to(userExchange).with("user.pdf");
     }
 
     @Bean
