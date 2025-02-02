@@ -53,7 +53,6 @@ public class EmailService {
             byte[] pdfBytes = pdfGenerator.generateOrderPdf(orderDTO);
             logger.info("PDF generado correctamente para la orden ID: {}", orderDTO.getOrderId());
 
-            logger.info("Enviando PDF al correo: {}", orderDTO.getUserMail());
             sendEmail(orderDTO.getUserMail(), pdfBytes, "document.pdf");
 
             logger.info("Correo con PDF enviado exitosamente a: {}", orderDTO.getUserMail());
@@ -64,6 +63,7 @@ public class EmailService {
             throw e;
         }
     }
+
 
     private void sendEmail(String to, byte[] pdfBytes, String fileName) throws MessagingException {
         logger.info("Preparando correo con archivo adjunto para: {}", to);

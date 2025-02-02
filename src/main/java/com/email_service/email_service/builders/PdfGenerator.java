@@ -53,7 +53,7 @@ public class PdfGenerator {
         contentStream.showText("--------------------------------------------------------------------------------------------------------------------------");
         contentStream.newLine();
 
-        for (ProductRecord item : orderDTO.getnewProductList()) {
+        for (ProductRecord item : orderDTO.getNewProductList()) {
             String productLine = String.format("%-8s %-20s %-25s %-8s %-4s",
                     item.id(), item.name(), item.description(), item.price(), item.quantity());
             contentStream.showText(productLine);
