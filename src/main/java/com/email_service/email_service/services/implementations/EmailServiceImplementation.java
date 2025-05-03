@@ -2,20 +2,20 @@ package com.email_service.email_service.services.implementations;
 import com.email_service.email_service.config.RabbitMQConfig;
 import com.email_service.email_service.models.EmailEvent;
 import com.email_service.email_service.services.EmailService;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class EmailServiceImplementation implements EmailService {
     private static final Logger logger = LoggerFactory.getLogger(EmailServiceImplementation.class);
 
-    @Autowired
-    private JavaMailSender mailSender;
+    private final JavaMailSender mailSender;
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_EMAIL)
     public void sendRegistrationEmail(EmailEvent emailEvent) {
