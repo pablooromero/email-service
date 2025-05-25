@@ -16,6 +16,7 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 
@@ -29,7 +30,13 @@ public class EmailServiceImplementation implements EmailService {
     private final PdfGenerator pdfGenerator;
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_EMAIL)
+    @Override
     public void sendRegistrationEmail(EmailEvent emailEvent) {
+        if (emailEvent == null || !StringUtils.hasText(emailEvent.to())) {
+            log.warn("Evento de correo de registro inválido o sin destinatario: {}", emailEvent);
+            return;
+        }
+
         logger.info("Recibido evento de correo para: {}", emailEvent.to());
 
         try {
@@ -46,8 +53,9 @@ public class EmailServiceImplementation implements EmailService {
     }
 
     @RabbitListener(queues = RabbitMQConfig.QUEUE_PDF)
+    @Override
     public void sendAccreditationPdfEmail(AccreditationPdfEvent pdfEvent) {
-        if (pdfEvent == null || pdfEvent.getTo() == null || pdfEvent.getTo().isEmpty() || pdfEvent.getAccreditationData() == null) {
+        if (pdfEvent == null || !StringUtils.hasText(pdfEvent.getTo()) || pdfEvent.getAccreditationData() == null) {
             logger.warn("Evento de PDF inválido o sin datos suficientes: {}", pdfEvent);
             return;
         }
